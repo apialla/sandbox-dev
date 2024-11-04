@@ -21,5 +21,31 @@
     <li>activte directory</li>
     <li>keyclock</li>
     <li>list all ports in different page or make it collapsible</li>
+
+    <br>
+    <p>
+
+        things need to be learned:
+        - what is AD, why do we have it?
+        - design AD hierarchy
+        - what is user federation, ldap protocol
+
+        challenge (1):
+        In AD
+        - create a new org unit [ex: users]
+        - create a new unix group (posix)
+        - create a new account & include all required details (ex: eamil)
+        In Keyclock
+        - link keyclock with AD and sync all users periodically
+
+        **coding**
+        - link app to ldap directly
+        - link app to keycloak (ldap)
+        - link app to apigw then to ldap
+        - link app to apigw then to keycloak
+
+        - app > apigw > keycloak (sso)
+
+</p>
 </body>
 </html>
