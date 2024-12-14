@@ -1,0 +1,92 @@
+openapi: 3.0.1
+info:
+  title: Authentication API - Login Endpoint
+  description: >
+    API for user login using **Basic Authentication**.  
+    Clients must include an `Authorization` header with the value `Basic <base64-encoded-email:password>`.  
+    On successful authentication, a JWT access token and a refresh token are returned.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Development server
+
+paths:
+  /auth/login:
+    post:
+      summary: User Login
+      description: >
+        The `/auth/login` endpoint allows users to log in using their credentials.  
+        Authentication is handled via **Basic Authentication**, where the user's email and password 
+        are encoded in Base64 and sent in the `Authorization` header.  
+        On success, the response includes an `accessToken` (JWT) for subsequent requests 
+        and a `refreshToken` for token renewal.  
+        If credentials are invalid, a `401 Unauthorized` response is returned.
+      security:
+        - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: User's email address
+                  example: "user@example.com"
+                password:
+                  type: string
+                  format: password
+                  description: User's password
+                  example: "password123"
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    description: JWT access token to be used in future requests
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  refreshToken:
+                    type: string
+                    description: Token used to refresh the access token
+                    example: "d1fba2bc12dd89..."
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message indicating invalid login
+                    example: "Invalid email or password"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message indicating missing or invalid fields
+                    example: "Email and password are required"
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: >
+        Use Basic Authentication by sending the `Authorization` header 
+        with the value `Basic <Base64-encoded-email:password>`.
