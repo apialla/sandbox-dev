@@ -6,66 +6,90 @@
     <title>Saqal - Home</title>
   </head>
   <body>
-    <h1>Welcome to Saqal!</h1>
-    <p>
-      This file is the main page for the project and contains all challenges
-      details.
+    <h1>Welcome to Apiallal!</h1>
+    <p>Apialla is designed to provide challenge-driven learning experience focuses on API
+      that reflect real world use-cases.
     </p>
-
+    
     <strong>Challenges:</strong>
     <ul>
       <details>
-        <summary>Basic Authentication Challenge</summary>
+        <summary>Desgin A new API:</summary>
         <p>
-          In this challenge you have to design a login api using OpenAPI Specs
-          (<a href="https://editor.swagger.io/">Swagger Editor</a>).
+          In this challenge you have to design a login api using OpenAPI Specs. In this challenge,
+          you don't have to write any code.
+          
+          You should write your OpenAPI Specs and save it as .yaml file then upload it below to
+          check if you passed the challenge or not.
+
         </p>
         Challenge Requirements:
         <ul>
           <li>Endpoint should be /auth/login.</li>
           <li>Method operation should be POST.</li>
-          <li>Body should have username and password only.</li>
+          <li>Body should have email and password only.</li>
           <li>Request content should be application/json.</li>
           <li>
-            Response should have at least 2 scenarios successful login and
-            invalid credentials.
+            Response should have at least 3 scenarios successful login
+            invalid credentials, and bad request.
           </li>
-          <li>Specs should be written in yaml/yml format.</li>
+          <li>Specs should be written in yaml format.</li>
         </ul>
-        <p></p>
-        <input type="file" id="yaml-file" accept=".yaml,.yml">
-  <button id="check-btn">Check YAML</button>
-  <p id="result"></p>
+        <p>Challenge Validator:</p>
+          <input type="file" id="yaml-file" accept=".yaml,.yml">
+          <button id="check-btn">Check YAML</button>
+          <p id="result"></p>
+          <details>
+            <summary>Hints:</summary>
+            <p>
+              Note: in this validator we validate against 33 keywords. So, all below keywords must be found to pass.
+
+              <br><br>
+              /// base validation
+              <br>
+              "openapi", "info", "title", "version", "servers", "url"
+              <br><br>
+              /// request validation
+              <br>
+              "paths", "/auth/login", "post", "summary", "description",
+              "security", "requestBody", "required", "content", "application/json",
+              "schema", "type", "required", "properties", "example",
+              "email", "password"
+              <br><br>
+              /// response validation
+              <br>
+              "responses", "200", "successful",
+              "400", "401", "bad", "error"
+              <br><br>
+              /// security validation
+              <br>
+              "components", "securitySchemes", "scheme"
+            </p>
+          </details>
   
-  <!-- Load the YAML library (if needed for parsing) -->
   <script src="https://cdn.jsdelivr.net/npm/js-yaml/dist/js-yaml.min.js"></script>
 
   <script>
-    // Function to validate specific strings in the YAML file
     async function validateYAMLStrings(file, requiredStrings) {
       try {
-        // Read the file content
-        const fileContent = await file.text();
+        const fileContent = (await file.text()).toLowerCase();
 
-        // Check if all required strings are present in the file content
         for (const str of requiredStrings) {
-          if (!fileContent.includes(str)) {
-            return false; // Return false if any required string is missing
+          if (!fileContent.includes(str.toLowerCase())) {
+            return false;
           }
         }
-        return true; // Return true if all required strings are found
+        return true;
       } catch (error) {
         console.error("Error validating YAML:", error);
-        return false; // Return false if an error occurs
+        return false;
       }
     }
 
-    // Event listener for the button
     document.getElementById("check-btn").addEventListener("click", async () => {
       const fileInput = document.getElementById("yaml-file");
       const resultElement = document.getElementById("result");
 
-      // Check if a file is selected
       if (!fileInput.files.length) {
         resultElement.textContent = "Please upload a YAML file.";
         resultElement.style.color = "red";
@@ -74,22 +98,25 @@
 
       const file = fileInput.files[0];
       
-      // Define the required strings to check
       const requiredStrings = [
-        "title",
-        "version",
-        "paths",
-        "post",
-        "application/json",
+        /// base validation
+        "openapi", "info", "title", "version", "servers", "url",
+
+        /// request validation
+        "paths", "/auth/login", "post", "summary", "description",
+        "security", "requestBody", "required", "content", "application/json",
+        "schema", "type", "required", "properties", "example",
         "email", "password",
-        "/auth/login", 
-        "content", 
-        "example", "responses", "200", "400", "401",
-        "description", "components", "securitySchemes",
-        "scheme", "basic"
+
+        /// response validation
+        "responses", "200", "successful",
+        "400", "401", "bad", "error",
+
+        /// security validation
+        "components", "securitySchemes", "scheme"
+        /// 33 validators
       ];
 
-      // Validate the uploaded YAML file
       const isValid = await validateYAMLStrings(file, requiredStrings);
 
       if (isValid) {
