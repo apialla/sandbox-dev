@@ -15,7 +15,7 @@ services:
       - ldap_data:/var/lib/ldap
       - ldap_config:/etc/ldap/slapd.d
     networks:
-      - saqal_network
+      - saqal_intranet
 
   ui.ldap.saqal:
     image: osixia/phpldapadmin:0.9.0
@@ -26,7 +26,7 @@ services:
       - "8081:80"
       - "16443:443"
     networks:
-      - saqal_network
+      - saqal_intranet
     depends_on:
       - ldap.saqal
 
@@ -35,6 +35,6 @@ volumes:
   ldap_config:
 
 networks:
-  saqal_network:
+  saqal_intranet:
     external: true
 

@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+     
+    home.saqal:
+        tty: true
+        # current project should have Dockerfile
+        build: .
+        ports:
+            - 65111:65111
+        volumes:
+            - .:/usr/src/app
+        environment:
+            PORT: 65111
+        networks:
+          - saqal_intranet
+
+volumes:
+    home_volume: {}
+
+networks:
+  saqal_intranet:
+    external: true
