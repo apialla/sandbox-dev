@@ -1,38 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Saqal - Home</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Welcome to Saqal!</h1>
-    <p>This file is the main page for the project and contains all challenges details.</p>
+    <p>
+      This file is the main page for the project and contains all challenges
+      details.
+    </p>
 
     <strong>Challenges:</strong>
     <ul>
-        <details>
-            <summary>Basic Authentication Challenge</summary>
-            <p>In this challenge you have to design a login api using OpenAPI Specs (<a href="https://editor.swagger.io/">Swagger Editor</a>).
-            </p>
-            Challenge Requirements:
-            <ul>
-                <li>Endpoint should be /auth/login.</li>
-                <li>Method operation should be POST.</li>
-                <li>Body should have username and password only.</li>
-                <li>Request content should be application/json.</li>
-                <li>Response should have at least 2 scenarios successful login and invalid credentials.</li>
-                <li>Specs should be written in yaml/yml format.</li>
-            </ul>
-            <p>
-            </p>          
-        </details>
-        <hr>
-        <details>
-            <summary>Basic Authentication Challenge2</summary>
-            <p>In this challenge you have to craete a basic authentication</p>
-        </details>
-        <hr>
+      <details>
+        <summary>Basic Authentication Challenge</summary>
+        <p>
+          In this challenge you have to design a login api using OpenAPI Specs
+          (<a href="https://editor.swagger.io/">Swagger Editor</a>).
+        </p>
+        Challenge Requirements:
+        <ul>
+          <li>Endpoint should be /auth/login.</li>
+          <li>Method operation should be POST.</li>
+          <li>Body should have username and password only.</li>
+          <li>Request content should be application/json.</li>
+          <li>
+            Response should have at least 2 scenarios successful login and
+            invalid credentials.
+          </li>
+          <li>Specs should be written in yaml/yml format.</li>
+        </ul>
+        <p></p>
+        <input type="file" id="yaml-file" accept=".yaml,.yml">
+  <button id="check-btn">Check YAML</button>
+  <p id="result"></p>
+  
+  <!-- Load the YAML library (if needed for parsing) -->
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml/dist/js-yaml.min.js"></script>
+
+  <script>
+    // Function to validate specific strings in the YAML file
+    async function validateYAMLStrings(file, requiredStrings) {
+      try {
+        // Read the file content
+        const fileContent = await file.text();
+
+        // Check if all required strings are present in the file content
+        for (const str of requiredStrings) {
+          if (!fileContent.includes(str)) {
+            return false; // Return false if any required string is missing
+          }
+        }
+        return true; // Return true if all required strings are found
+      } catch (error) {
+        console.error("Error validating YAML:", error);
+        return false; // Return false if an error occurs
+      }
+    }
+
+    // Event listener for the button
+    document.getElementById("check-btn").addEventListener("click", async () => {
+      const fileInput = document.getElementById("yaml-file");
+      const resultElement = document.getElementById("result");
+
+      // Check if a file is selected
+      if (!fileInput.files.length) {
+        resultElement.textContent = "Please upload a YAML file.";
+        resultElement.style.color = "red";
+        return;
+      }
+
+      const file = fileInput.files[0];
+      
+      // Define the required strings to check
+      const requiredStrings = [
+        "title",
+        "version",
+        "paths",
+        "post",
+        "application/json",
+        "email", "password",
+        "/auth/login", 
+        "content", 
+        "example", "responses", "200", "400", "401",
+        "description", "components", "securitySchemes",
+        "scheme", "basic"
+      ];
+
+      // Validate the uploaded YAML file
+      const isValid = await validateYAMLStrings(file, requiredStrings);
+
+      if (isValid) {
+        resultElement.textContent = "Your API is well designed.";
+        resultElement.style.color = "green";
+      } else {
+        resultElement.textContent = "Your API is missing some required fields.";
+        resultElement.style.color = "red";
+      }
+    });
+  </script>
+      </details>
+      <hr />
+      <details>
+        <summary>Basic Authentication Challenge2</summary>
+        <p>In this challenge you have to craete a basic authentication</p>
+      </details>
+      <hr />
     </ul>
-</body>
+  </body>
 </html>
