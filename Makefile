@@ -1,5 +1,5 @@
 # Define the subdirectories containing Makefiles
-SUBDIRS = apisix keycloak active-directory
+SUBDIRS = apisix keycloak active-directory saqal
 
 # Define targets for each directory
 .PHONY: init
