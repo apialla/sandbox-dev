@@ -14,16 +14,18 @@
     <strong>Challenges:</strong>
     <ul>
       <details>
-        <summary>Desgin A new API:</summary>
+        <summary>Desgin A new simple API</summary>
+        <h3>A. Build your own OpenAPI Specs</h3>
         <p>
-          In this challenge you have to design a login api using OpenAPI Specs. In this challenge,
-          you don't have to write any code.
+          In this task you have to design a login api using OpenAPI Specs. <u>In this task you don't have to write any code.</u>
           
-          You should write your OpenAPI Specs and save it as .yaml file then upload it below to
-          check if you passed the challenge or not.
+          You should write an OpenAPI Specs and save it as .yaml file then validate it below to
+          check if you've passed the first task or not.
+
+          <br><br>If you want to know more about OpenAPI Specs watch <a href="https://www.youtube.com/watch?v=s9u3mXQZbXI&t=1787s">this</a>.
 
         </p>
-        Challenge Requirements:
+        Task Requirements:
         <ul>
           <li>Endpoint should be /auth/login.</li>
           <li>Method operation should be POST.</li>
@@ -35,38 +37,77 @@
           </li>
           <li>Specs should be written in yaml format.</li>
         </ul>
-        <p>Challenge Validator:</p>
+        <p>OpenAPI Specs Validator:</p>
           <input type="file" id="yaml-file" accept=".yaml,.yml">
           <button id="check-btn">Check YAML</button>
           <p id="result"></p>
           <details>
             <summary>Hints:</summary>
             <p>
-              Note: in this validator we validate against 33 keywords. So, all below keywords must be found to pass.
+              <u>Note: in this validator we validate against 33 keywords. So, all below keywords must be found in your specs file to pass.</u>
 
+              <code>
               <br><br>
-              /// base validation
-              <br>
-              "openapi", "info", "title", "version", "servers", "url"
-              <br><br>
-              /// request validation
-              <br>
-              "paths", "/auth/login", "post", "summary", "description",
-              "security", "requestBody", "required", "content", "application/json",
-              "schema", "type", "required", "properties", "example",
-              "email", "password"
-              <br><br>
-              /// response validation
-              <br>
-              "responses", "200", "successful",
-              "400", "401", "bad", "error"
-              <br><br>
-              /// security validation
-              <br>
-              "components", "securitySchemes", "scheme"
+              openapi, info, title, version, servers, url, 
+              paths, /auth/login, post, summary, description, 
+              security, requestBody, required, content, application/json, 
+              schema, type, required, properties, example, email, 
+              password, responses, 200, successful, 400, 401, bad, 
+              error, components, securitySchemes, scheme.
+            </code>
             </p>
           </details>
   
+          <h3>B. Optimize an existing API</h3>
+          In this task, you have an issue with a single API. this
+          API has been already developed but still has performance issue.
+
+          In this task we will optimize an api that fetch more than 150,000 document
+          from mongo database at once. in addition, the document is complex and has nested objects.
+          
+          <br>First, let's try to fetch the API using postman. let's try to
+          do a hit against this url `http://localhost:13111/api/v1/product-details` as GET operation.
+
+          You should see this error message in postman `Error: Maximum response size reached`, which dose mean
+          that postman stopped this operation as it knows it is very expensive.
+
+          So, alternatively we could use `curl` to check the response time. Copy and paste
+          this command in your cmd or terminal `curl -i http://localhost:13111/api/v1/product-details | grep X-Response-Time`
+          then check X-Response-Time. It's super slow.
+
+          if you want to see response sample use below request in postman. This should fetch only 1 document 
+          `curl http://localhost:13111/api/v1/get-product-details`.
+
+          <br><br>
+          Amm! what should we do?
+          
+          Each use case has its own way of solving it. For this task we will cover the most common cases.
+          Pagination, and filters. Caching and query optimization are important but not API specific this
+          is why we will skip it for now.
+
+          <br><br>
+          <strong>What should you do?</strong>
+          download this <a href="./side/products-api-v1.yml">openapi specs</a> then add pagination and filters to it.
+          filters should contain at least [limit, offset, search [by category, by brand, by price, by availability, and by rating].
+
+          and pagination should limit returned array to only 10 objects.
+
+          <br><br>
+          In this challenge you don't have to write any code as well.
+
+          <h3>B. Convert your OpenAPI Specs to Postman Collection</h3>
+          /// refer to a video and a tool
+          <h3>C. Develop unittests against your API</h3>
+          /// refer to a video
+          /// we need to develop all unittests
+          you need to copy below snippet in your postman api client.
+          - pre-script
+          - post-script
+          - execute the runner
+
+          if all pass this means your api was successfully designed.
+          
+
   <script src="https://cdn.jsdelivr.net/npm/js-yaml/dist/js-yaml.min.js"></script>
 
   <script>

@@ -1,0 +1,172 @@
+openapi: 3.0.3
+info:
+  title: Product API
+  description: >
+    API for fetching product details.  
+    Includes endpoints to retrieve a list of products or a single product by its unique ID.
+  version: 1.0.0
+servers:
+  - url: http://localhost:13111/api/v2
+    description: Development server
+
+paths:
+  /product-details:
+    get:
+      summary: Get all product details
+      description: >
+        The `/product-details` endpoint retrieves a list of all product objects available in the system.  
+        Returns an array of products, each with detailed information, including price, specifications, stock, and more.
+      responses:
+        '200':
+          description: A list of products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message indicating the server encountered an issue
+                    example: "Internal server error"
+  
+components:
+  schemas:
+    Product:
+      type: object
+      description: A product object containing all details about a product.
+      properties:
+        _id:
+          type: string
+          description: The unique ID of the product.
+          example: "6770e83333e0d26fd1303629"
+        id:
+          type: string
+          description: The product identifier.
+          example: "P123456789"
+        name:
+          type: string
+          description: The name of the product.
+          example: "Lyndy Gamlen"
+        description:
+          type: string
+          description: The description of the product.
+          example: "Duis aliquam convallis nunc. Proin at turpis..."
+        brand:
+          type: string
+          description: The brand of the product.
+          example: "Riffwire"
+        category:
+          type: string
+          description: The category of the product.
+          example: "Audio & Headphones"
+        tags:
+          type: string
+          description: Tags associated with the product.
+          example: "HDR"
+        price:
+          type: object
+          description: Pricing details of the product.
+          properties:
+            basePrice:
+              type: string
+              description: The base price of the product.
+              example: "Rupiah"
+            currency:
+              type: string
+              description: The currency of the product price.
+              example: "IDR"
+            discount:
+              type: object
+              description: Discount details for the product.
+              properties:
+                type:
+                  type: string
+                  description: The type of discount.
+                  example: "fixed"
+                value:
+                  type: number
+                  format: float
+                  description: The value of the discount.
+                  example: 480.91
+                validUntil:
+                  type: string
+                  format: date-time
+                  description: The validity date of the discount.
+                  example: "2023-09-29T21:00:00.000Z"
+            finalPrice:
+              type: string
+              description: The final price after applying discounts.
+              example: "Kwanza"
+        specifications:
+          type: object
+          description: Specifications of the product.
+          properties:
+            screenSize:
+              type: string
+              description: The screen size of the product.
+              example: "42-inch"
+            smartFeatures:
+              type: string
+              description: Smart features available on the product.
+              example: "Dolby Vision"
+        stock:
+          type: object
+          description: Stock information of the product.
+          properties:
+            availability:
+              type: string
+              description: Stock availability status.
+              example: "Out of Stock"
+            quantity:
+              type: integer
+              description: Available stock quantity.
+              example: 640
+            warehouses:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The warehouse ID.
+                    example: "WH001"
+                  location:
+                    type: string
+                    description: The location of the warehouse.
+                    example: "3165 Sullivan Park"
+                  quantity:
+                    type: integer
+                    description: Quantity available in the warehouse.
+                    example: 93
+        rating:
+          type: object
+          description: Rating details of the product.
+          properties:
+            average:
+              type: number
+              format: float
+              description: Average product rating.
+              example: 0.8
+            reviews:
+              type: integer
+              description: Number of reviews.
+              example: 2036
+        images:
+          type: array
+          items:
+            type: string
+            format: uri
+            description: URLs of product images.
+            example: "http://dummyimage.com/228x100.png/cc0000/ffffff"
+        __v:
+          type: integer
+          description: Version key for the document.
+          example: 0

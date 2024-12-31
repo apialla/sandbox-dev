@@ -1,0 +1,251 @@
+openapi: 3.0.3
+info:
+  title: Product API - Paginated and Filtered Product Details
+  description: >
+    This API allows users to retrieve a paginated and filtered list of products.  
+    Users can filter the results by category, brand, availability, rating range, or search for specific keywords.  
+    Pagination is supported using `limit` and `offset` query parameters to handle large datasets efficiently.
+  version: 1.0.0
+servers:
+  - url: http://localhost:13111/api/v2
+    description: Development server
+
+paths:
+  /product-details:
+    get:
+      summary: Retrieve Paginated and Filtered Product Details
+      description: >
+        This endpoint provides a paginated and filtered list of products stored in the database.  
+        The results can be filtered using optional query parameters such as `category`, `brand`, 
+        `availability`, and rating range (`minRating`, `maxRating`).  
+        Additionally, users can perform a keyword search on product names, descriptions, and tags using the `search` parameter.  
+        Pagination is controlled using the `limit` and `offset` query parameters.
+      parameters:
+        - name: category
+          in: query
+          required: false
+          description: Filter products by category (e.g., Electronics, Clothing).
+          schema:
+            type: string
+            example: "Electronics"
+        - name: brand
+          in: query
+          required: false
+          description: Filter products by brand (e.g., Samsung, Nike).
+          schema:
+            type: string
+            example: "Samsung"
+        - name: availability
+          in: query
+          required: false
+          description: >
+            Filter products by stock availability status.  
+            Valid values might include "in_stock" or "out_of_stock".
+          schema:
+            type: string
+            example: "in_stock"
+        - name: minRating
+          in: query
+          required: false
+          description: Filter products with a minimum average rating.
+          schema:
+            type: number
+            format: float
+            example: 4.0
+        - name: maxRating
+          in: query
+          required: false
+          description: Filter products with a maximum average rating.
+          schema:
+            type: number
+            format: float
+            example: 5.0
+        - name: search
+          in: query
+          required: false
+          description: >
+            Perform a keyword search on product names, descriptions, or tags.  
+            This parameter supports case-insensitive partial matching.
+          schema:
+            type: string
+            example: "wireless"
+        - name: limit
+          in: query
+          required: false
+          description: >
+            The maximum number of products to return in the response.  
+            Default value is 10.
+          schema:
+            type: integer
+            example: 10
+        - name: offset
+          in: query
+          required: false
+          description: >
+            The number of products to skip before starting to return results.  
+            Use this parameter for pagination.
+          schema:
+            type: integer
+            example: 0
+      responses:
+        '200':
+          description: Successfully retrieved paginated and filtered product details.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pagination:
+                    type: object
+                    description: Metadata about the pagination.
+                    properties:
+                      totalDocs:
+                        type: integer
+                        description: Total number of documents matching the filters.
+                        example: 250
+                      limit:
+                        type: integer
+                        description: The maximum number of documents returned in the response.
+                        example: 10
+                      offset:
+                        type: integer
+                        description: The number of documents skipped before starting to return results.
+                        example: 0
+                      totalPages:
+                        type: integer
+                        description: Total number of pages available.
+                        example: 25
+                      currentPage:
+                        type: integer
+                        description: The current page number.
+                        example: 1
+                  result:
+                    type: array
+                    description: The filtered and paginated list of products.
+                    items:
+                      $ref: '#/components/schemas/Product'
+        '400':
+          description: Invalid query parameter values provided.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Details of the validation error.
+                    example: "minRating must be a valid number."
+        '500':
+          description: Internal server error occurred while fetching products.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message indicating server-side failure.
+                    example: "Internal server error"
+
+components:
+  schemas:
+    Product:
+      type: object
+      description: A representation of a product in the database.
+      properties:
+        _id:
+          type: string
+          description: The unique identifier of the product in the database.
+          example: "64a93f7d4b5c3b7dcebd7c5f"
+        name:
+          type: string
+          description: The name of the product.
+          example: "Wireless Bluetooth Speaker"
+        description:
+          type: string
+          description: Detailed information about the product.
+          example: "Portable wireless speaker with high-quality sound."
+        category:
+          type: string
+          description: The category to which the product belongs.
+          example: "Electronics"
+        brand:
+          type: string
+          description: The brand of the product.
+          example: "Sony"
+        price:
+          type: object
+          description: Pricing details of the product.
+          properties:
+            basePrice:
+              type: number
+              format: float
+              description: The base price of the product.
+              example: 99.99
+            currency:
+              type: string
+              description: The currency of the product price.
+              example: "USD"
+            discount:
+              type: object
+              description: Discount details applicable to the product.
+              properties:
+                type:
+                  type: string
+                  description: The type of discount (e.g., percentage or fixed amount).
+                  example: "percentage"
+                value:
+                  type: number
+                  format: float
+                  description: The discount value.
+                  example: 10
+                validUntil:
+                  type: string
+                  format: date-time
+                  description: Expiration date of the discount.
+                  example: "2024-12-31T23:59:59Z"
+            finalPrice:
+              type: number
+              format: float
+              description: The final price after applying the discount.
+              example: 89.99
+        stock:
+          type: object
+          description: Stock information of the product.
+          properties:
+            availability:
+              type: string
+              description: Stock status of the product (e.g., in_stock or out_of_stock).
+              example: "in_stock"
+            quantity:
+              type: integer
+              description: Number of units available in stock.
+              example: 50
+        rating:
+          type: object
+          description: Rating information of the product.
+          properties:
+            average:
+              type: number
+              format: float
+              description: The average rating of the product.
+              example: 4.5
+            reviews:
+              type: integer
+              description: Number of reviews submitted for the product.
+              example: 200
+        tags:
+          type: array
+          description: A list of tags associated with the product.
+          items:
+            type: string
+          example: ["portable", "wireless", "bluetooth"]
+        images:
+          type: array
+          description: A list of URLs pointing to images of the product.
+          items:
+            type: string
+            format: uri
+          example:
+            - "https://example.com/images/product1.jpg"
+            - "https://example.com/images/product2.jpg"
