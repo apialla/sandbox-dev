@@ -55,9 +55,8 @@ export const Product = mongoose.model("Product", productSchema);
 
 export async function connectDB() {
   const mongourl = process.env.mongodb_uri || "mongodb://localhost:27017/iapi";
-  mongoose
-    .connect(mongourl);
-    __seedDB();
+  await mongoose.connect(mongourl);
+  await __seedDB();
 }
 
 async function __seedDB() {

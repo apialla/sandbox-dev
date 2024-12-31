@@ -14,6 +14,9 @@ services:
             PORT: 13111
         networks:
           - saqal_intranet
+        depends_on:
+            - mongodb
+            - mongo-express
 
     # needs to have mongodb instance
     # mongodb container
@@ -29,6 +32,8 @@ services:
         environment:
             - MONGO_INITDB_ROOT_USERNAME=
             - MONGO_INITDB_ROOT_PASSWORD=
+        networks:
+          - saqal_intranet
 
     # mongo-express container
     mongo-express:
@@ -44,6 +49,8 @@ services:
             - ME_CONFIG_MONGODB_SERVER=mongodb
         depends_on:
             - mongodb
+        networks:
+          - saqal_intranet
 
 volumes:
     iapi_volume: {}

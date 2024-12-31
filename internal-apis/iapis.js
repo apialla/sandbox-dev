@@ -110,7 +110,7 @@ app.listen(PORT, async () => {
     await connectDB();
     console.log(`Server is running on http://localhost:${PORT}`);
   } catch (error) {
-    console.log(`error`);
+    console.log(error);
   }
 });
 
