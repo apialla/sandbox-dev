@@ -9,10 +9,13 @@ const app = express();
 const PORT = process.env.PORT || 65111
 
 app.use((req, res, next) => {    
+    if(req.url === '/get-apiv1') {
+        return next();
+    }
     if(req.url !== '/') {
         return res.status(404).sendFile(join(__dirname, '404.html'));
     }
-    next();
+    return next();
 });
 
 app.use(express.static(join(__dirname, 'public')));
@@ -20,6 +23,10 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
     res.sendFile(join(__dirname, 'home.html'));
+});
+
+app.get('/get-apiv1', (req, res) => {
+    res.sendFile(join(__dirname, '/side/products-api-v1.yml'))
 });
 
 app.listen(PORT, () => {
